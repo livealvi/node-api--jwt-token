@@ -1,7 +1,12 @@
 import React, { useContext } from "react";
 import { initializeApp } from "firebase/app";
 import firebaseConfig from "./firebase.config";
-import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import {
+  getAuth,
+  signInWithPopup,
+  GoogleAuthProvider,
+  getIdToken,
+} from "firebase/auth";
 import { UserContext } from "../../App";
 import { useHistory } from "react-router-dom";
 import { useLocation } from "react-router-dom";
@@ -28,6 +33,7 @@ const Login = () => {
         const signedInUser = { name: displayName, email };
         setLoggedInUser(signedInUser);
         console.log(signedInUser);
+        storeAuthToken();
         history.replace(from);
       })
       .catch((error) => {
@@ -41,6 +47,22 @@ const Login = () => {
         console.log("credential:", credential);
       });
   };
+
+  const storeAuthToken = () => {
+    const auth = getAuth();
+    const user = auth.currentUser;
+
+    if (user) {
+      getIdToken(user)
+        .then((idToken) => {
+          sessionStorage.setItem("token", idToken);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  };
+
   return (
     <div>
       <h1>This is Login</h1>
