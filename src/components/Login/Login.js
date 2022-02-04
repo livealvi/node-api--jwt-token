@@ -32,7 +32,6 @@ const Login = () => {
         const { displayName, email } = user;
         const signedInUser = { name: displayName, email };
         setLoggedInUser(signedInUser);
-        console.log(signedInUser);
         storeAuthToken();
         history.replace(from);
       })
